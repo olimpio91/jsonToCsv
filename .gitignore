@@ -1,4 +1,1 @@
-data.csv
-dataJs.json
-demofile.csv
-.gitignore
+/data_testes
