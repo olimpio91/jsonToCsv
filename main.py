@@ -33,7 +33,7 @@ class Application(Tk):
         self.select_a_file = Button(self.frame, text="SELECT A FILE", command=self.loadFile)
         self.select_a_file.place(relx=0.1, rely=0.81, relwidth=0.1, relheight=0.06)
         
-        self.convert = Button(self.frame, text="CONVERTER", command=self.insertTextAreaCsv)
+        self.convert = Button(self.frame, text="CONVERT", command=self.insertTextAreaCsv)
         self.convert.place(relx=0.2, rely=0.81, relwidth=0.1, relheight=0.06)
         
         self.savefile = Button(self.frame, text="SAVE FILE", command=self.saveFile)
@@ -46,16 +46,17 @@ class Application(Tk):
     def loadFile(self):
         self.filetype = [(".json", "*.json")]
         self.path = askopenfilename(filetypes=self.filetype, initialdir="/")
-        with open(self.path , "r", encoding="utf8") as dt:
-            self.textAreaJson.insert("1.0", dt.read())
+        with open(self.path , "r", encoding="utf8") as self.filejson:
+            self.textAreaJson.insert("1.0", self.filejson.read())
 
     def insertTextAreaCsv(self):
         if self.textAreaJson.get("1.0",END).strip() == "":
             showwarning(title="Aviso!", message="Não foi possivel fazer a conversão")
+            
         else:    
-            self.dt_json = pd.read_json(self.path)
-            self.file = self.dt_json.to_csv()
-            self.textAreaTocsv.insert("1.0",self.file)
+            self.filejson = pd.read_json(self.path)
+            self.filecsv = self.filejson.to_csv()
+            self.textAreaTocsv.insert("1.0",self.filecsv)
 
     def saveFile(self):
         if self.textAreaTocsv.get("1.0",END).strip() == "":
@@ -65,10 +66,11 @@ class Application(Tk):
             path = asksaveasfilename(initialdir="/")
             if not path.endswith(".csv"):
                 path += ".csv"
-            self.dt_json.to_csv(path)
+            self.filejson.to_csv(path)
     
     def clear(self):
         self.textAreaJson.delete("1.0", END)
         self.textAreaTocsv.delete("1.0",END)
+        
 app = Application("converter","1000x400")
 app.mainloop()
